@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C1 Preposition Gap-Fill: Quality of Life in Spain</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #C8A951;
+    --gold-light: #E8D9A0;
+    --ink: #1A1A2E;
+    --ink-soft: #2D2D44;
+    --cream: #FAF7F0;
+    --cream-dark: #F0EBE0;
+    --terracotta: #C4613A;
+    --sea: #2E6B8A;
+    --sea-light: #C5DEE9;
+    --correct: #3D8B5E;
+    --correct-bg: #E3F2E9;
+    --wrong: #B8443A;
+    --wrong-bg: #FBEAE8;
+    --shadow: rgba(26, 26, 46, 0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--cream);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.75;
+    font-weight: 400;
+  }
+  .hero {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(200, 169, 81, 0.15), transparent 60%),
+      radial-gradient(ellipse at 80% 30%, rgba(196, 97, 58, 0.1), transparent 50%);
+    pointer-events: none;
+  }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 0.4rem;
+    position: relative;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero .subtitle {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--gold-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .hero .level-badge {
+    display: inline-block;
+    background: var(--terracotta);
+    color: white;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 2px;
+  }
+
+  /* === WORD BANK === */
+  .word-bank {
+    max-width: 740px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 0;
+  }
+  .word-bank-box {
+    background: white;
+    border: 1.5px solid var(--gold-light);
+    border-radius: 6px;
+    padding: 1rem 1.4rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.7rem;
+    align-items: center;
+  }
+  .word-bank-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-right: 0.5rem;
+  }
+  .word-bank-chip {
+    display: inline-block;
+    background: var(--cream);
+    border: 1px solid var(--cream-dark);
+    border-radius: 3px;
+    padding: 0.2rem 0.7rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    transition: opacity 0.3s, background 0.3s;
+  }
+  .word-bank-chip.used {
+    opacity: 0.35;
+    text-decoration: line-through;
+    background: var(--cream-dark);
+  }
+
+  /* === SCORE BAR === */
+  .score-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(250, 247, 240, 0.92);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--cream-dark);
+    padding: 0.7rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .score-bar .progress-track {
+    flex: 1; min-width: 120px; max-width: 300px;
+    height: 6px; background: var(--cream-dark); border-radius: 3px; overflow: hidden;
+  }
+  .score-bar .progress-fill {
+    height: 100%; background: var(--gold); border-radius: 3px;
+    transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1); width: 0%;
+  }
+  .score-bar .stats {
+    display: flex; gap: 1.2rem; font-size: 0.85rem; font-weight: 500; color: var(--ink-soft);
+  }
+  .score-bar .stats .num { font-weight: 600; color: var(--ink); }
+  .score-bar .stats .correct-count { color: var(--correct); }
+  .score-bar .stats .wrong-count { color: var(--wrong); }
+
+  /* === ARTICLE === */
+  .article-wrap {
+    max-width: 740px; margin: 0 auto; padding: 2rem 1.5rem 4rem;
+  }
+  .section-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem; font-weight: 700; color: var(--ink);
+    margin: 2.2rem 0 0.6rem; padding-bottom: 0.35rem;
+    border-bottom: 2px solid var(--gold); display: inline-block;
+  }
+  .section-label:first-of-type { margin-top: 0; }
+  .article-text {
+    font-size: 1.05rem; line-height: 1.85; color: var(--ink-soft); margin-bottom: 1rem;
+  }
+
+  /* === GAP INPUT — open cloze === */
+  .gap-wrapper {
+    display: inline-flex; align-items: baseline; position: relative; margin: 0 2px;
+  }
+  .gap-num {
+    font-family: 'Playfair Display', serif; font-size: 0.7rem; font-weight: 700;
+    color: var(--gold); position: absolute; top: -0.15rem; left: 0.15rem;
+    user-select: none; z-index: 2;
+  }
+  .gap-input {
+    width: 100px;
+    font-family: 'Source Sans 3', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: white;
+    border: none;
+    border-bottom: 2px solid var(--gold);
+    padding: 0.15rem 0.35rem 0.2rem 1.1rem;
+    outline: none;
+    transition: border-color 0.25s, background 0.3s, box-shadow 0.25s;
+    border-radius: 2px 2px 0 0;
+  }
+  .gap-input:focus {
+    border-color: var(--sea);
+    box-shadow: 0 2px 0 0 var(--sea);
+    background: var(--sea-light);
+  }
+  .gap-input.correct {
+    border-color: var(--correct);
+    background: var(--correct-bg);
+    box-shadow: 0 2px 0 0 var(--correct);
+    color: var(--correct);
+    font-weight: 600;
+    pointer-events: none;
+  }
+  .gap-input.wrong {
+    border-color: var(--wrong);
+    background: var(--wrong-bg);
+    box-shadow: 0 2px 0 0 var(--wrong);
+    animation: shake 0.4s ease;
+  }
+  .gap-correction {
+    display: none; font-size: 0.78rem; font-weight: 600; color: var(--correct);
+    position: absolute; bottom: -1.25rem; left: 0.3rem; white-space: nowrap;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .gap-correction.visible { display: block; opacity: 1; }
+
+  /* === HINT === */
+  .hint-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 18px; height: 18px; font-size: 0.65rem; font-weight: 700;
+    color: var(--sea); border: 1.5px solid var(--sea); border-radius: 50%;
+    cursor: pointer; user-select: none; margin-left: 2px; vertical-align: middle;
+    position: relative; transition: background 0.2s, color 0.2s;
+  }
+  .hint-btn:hover { background: var(--sea); color: white; }
+  .hint-tooltip {
+    display: none; position: absolute; bottom: 130%; left: 50%;
+    transform: translateX(-50%); background: var(--ink); color: var(--cream);
+    font-family: 'Source Sans 3', sans-serif; font-size: 0.78rem; font-weight: 400;
+    padding: 0.45rem 0.7rem; border-radius: 4px; white-space: nowrap;
+    z-index: 50; pointer-events: none;
+  }
+  .hint-tooltip::after {
+    content: ''; position: absolute; top: 100%; left: 50%;
+    transform: translateX(-50%); border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+  .hint-btn.open .hint-tooltip { display: block; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-4px); }
+    40% { transform: translateX(4px); }
+    60% { transform: translateX(-3px); }
+    80% { transform: translateX(2px); }
+  }
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+
+  /* === BUTTONS === */
+  .controls {
+    display: flex; gap: 1rem; margin-top: 2.5rem; flex-wrap: wrap; justify-content: center;
+  }
+  .btn {
+    font-family: 'Source Sans 3', sans-serif; font-size: 0.9rem; font-weight: 600;
+    letter-spacing: 0.04em; padding: 0.7rem 2rem; border: none; border-radius: 3px;
+    cursor: pointer; transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: var(--terracotta); color: white;
+    box-shadow: 0 2px 8px rgba(196, 97, 58, 0.25);
+  }
+  .btn-primary:hover { background: #b35530; box-shadow: 0 4px 14px rgba(196, 97, 58, 0.3); }
+  .btn-secondary {
+    background: transparent; color: var(--ink-soft); border: 1.5px solid var(--cream-dark);
+  }
+  .btn-secondary:hover { border-color: var(--ink-soft); }
+
+  /* === RESULTS === */
+  .results-panel {
+    display: none; margin-top: 2rem; background: white; border-radius: 6px;
+    padding: 1.8rem 2rem; box-shadow: 0 2px 20px var(--shadow); text-align: center;
+  }
+  .results-panel.visible { display: block; animation: pop 0.35s ease; }
+  .results-panel h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .results-panel .big-score { font-size: 3rem; font-weight: 700; color: var(--gold); margin: 0.5rem 0; }
+  .results-panel .feedback { font-size: 1rem; color: var(--ink-soft); margin-bottom: 1rem; }
+
+  /* === ANSWER KEY === */
+  .answer-key {
+    display: none; margin-top: 2rem; background: white; border-radius: 6px;
+    padding: 1.5rem 2rem; box-shadow: 0 2px 20px var(--shadow);
+  }
+  .answer-key.visible { display: block; }
+  .answer-key h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 0.8rem; color: var(--ink); }
+  .answer-key-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.4rem 1.5rem;
+  }
+  .answer-key-item {
+    font-size: 0.88rem; color: var(--ink-soft); padding: 0.25rem 0;
+    border-bottom: 1px solid var(--cream-dark);
+  }
+  .answer-key-item strong { color: var(--correct); font-weight: 600; }
+  .answer-key-item .ak-context { color: #999; font-style: italic; font-size: 0.82rem; }
+
+  @media (max-width: 600px) {
+    .hero { padding: 2rem 1.2rem 1.8rem; }
+    .article-wrap { padding: 1.5rem 1rem 3rem; }
+    .gap-input { width: 85px; font-size: 0.95rem; }
+    .score-bar { padding: 0.5rem 1rem; }
+    .word-bank { padding: 1rem 1rem 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="level-badge">C1 Advanced</div>
+  <h1>Quality of Life <span>in Spain</span></h1>
+  <p class="subtitle">Dependent Prepositions &middot; Open Cloze</p>
+</div>
+
+<div class="score-bar">
+  <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="stats">
+    <span>Answered: <span class="num" id="answeredCount">0</span>/15</span>
+    <span class="correct-count">&#10003; <span id="correctCount">0</span></span>
+    <span class="wrong-count">&#10007; <span id="wrongCount">0</span></span>
+  </div>
+</div>
+
+<div class="word-bank">
+  <div class="word-bank-box" id="wordBankBox">
+    <span class="word-bank-label">Word Bank:</span>
+    <span class="word-bank-chip" data-word="about">about</span>
+    <span class="word-bank-chip" data-word="at">at</span>
+    <span class="word-bank-chip" data-word="for">for</span>
+    <span class="word-bank-chip" data-word="for">for</span>
+    <span class="word-bank-chip" data-word="from">from</span>
+    <span class="word-bank-chip" data-word="from">from</span>
+    <span class="word-bank-chip" data-word="in">in</span>
+    <span class="word-bank-chip" data-word="in">in</span>
+    <span class="word-bank-chip" data-word="of">of</span>
+    <span class="word-bank-chip" data-word="on">on</span>
+    <span class="word-bank-chip" data-word="on">on</span>
+    <span class="word-bank-chip" data-word="to">to</span>
+    <span class="word-bank-chip" data-word="to">to</span>
+    <span class="word-bank-chip" data-word="to">to</span>
+    <span class="word-bank-chip" data-word="with">with</span>
+  </div>
+</div>
+
+<div class="article-wrap" id="articleWrap"></div>
+
+<script>
+const gaps = [
+  { id: 1,  answers: ["for"],    hint: "renowned ___",    context: "renowned" },
+  { id: 2,  answers: ["with"],   hint: "associated ___",  context: "associated" },
+  { id: 3,  answers: ["to"],     hint: "attributed ___",  context: "attributed" },
+  { id: 4,  answers: ["from"],   hint: "benefit ___",     context: "benefit" },
+  { id: 5,  answers: ["on"],     hint: "dependent ___",   context: "dependent" },
+  { id: 6,  answers: ["to"],     hint: "entitled ___",    context: "entitled" },
+  { id: 7,  answers: ["with"],   hint: "comply ___",      context: "comply" },
+  { id: 8,  answers: ["to"],     hint: "contribute ___",  context: "contribute" },
+  { id: 9,  answers: ["in"],     hint: "result ___",      context: "result" },
+  { id: 10, answers: ["on"],     hint: "insist ___",      context: "insist" },
+  { id: 11, answers: ["of"],     hint: "typical ___",     context: "typical" },
+  { id: 12, answers: ["for"],    hint: "compensate ___",  context: "compensate" },
+  { id: 13, answers: ["from"],   hint: "refrain ___",     context: "refrain" },
+  { id: 14, answers: ["about"],  hint: "sceptical ___",   context: "sceptical" },
+  { id: 15, answers: ["at"],     hint: "aimed ___",       context: "aimed" },
+];
+
+function gapHTML(id) {
+  const g = gaps.find(x => x.id === id);
+  return `<span class="gap-wrapper">
+    <span class="gap-num">${id}</span>
+    <input class="gap-input" type="text" data-id="${id}" autocomplete="off" spellcheck="false" maxlength="10">
+    <span class="hint-btn" onclick="toggleHint(this)" title="Hint">?<span class="hint-tooltip">${g.hint}</span></span>
+    <span class="gap-correction" id="corr-${id}"></span>
+  </span>`;
+}
+
+const articleHTML = `
+<span class="section-label">A Nation Renowned for Its Way of Life</span>
+<p class="article-text">
+Spain is internationally renowned ${gapHTML(1)} its exceptional quality of life, a reputation long associated ${gapHTML(2)} its favourable climate, vibrant social culture, and accessible public services. This enviable standard of living cannot be attributed ${gapHTML(3)} any single factor; rather, it is the product of deeply rooted traditions and progressive public policy working in tandem.
+</p>
+
+<span class="section-label">Healthcare and Longevity</span>
+<p class="article-text">
+Spanish residents benefit ${gapHTML(4)} one of the most comprehensive public healthcare systems in the European Union. The quality of treatment is not dependent ${gapHTML(5)} the patient\u2019s income, as all legal residents are entitled ${gapHTML(6)} free primary and specialist care. Healthcare providers must comply ${gapHTML(7)} strict national standards, ensuring consistently high outcomes across the country. The Mediterranean diet, combined with an active outdoor lifestyle, is widely thought to contribute ${gapHTML(8)} Spain\u2019s remarkably high life expectancy \u2014 currently among the top three worldwide.
+</p>
+
+<span class="section-label">Social Fabric and Daily Rhythms</span>
+<p class="article-text">
+The Spanish emphasis on communal life and unhurried daily routines can often result ${gapHTML(9)} a profound sense of belonging among residents. Spaniards insist ${gapHTML(10)} carving out time for leisurely meals, evening paseos, and family gatherings \u2014 behaviour that is entirely typical ${gapHTML(11)} a culture that refuses to subordinate personal fulfilment to professional ambition.
+</p>
+
+<span class="section-label">Economic Realities</span>
+<p class="article-text">
+While salaries in Spain may lag behind those of some northern European neighbours, the significantly lower cost of living tends to compensate ${gapHTML(12)} this gap. Spaniards generally refrain ${gapHTML(13)} the kind of relentless consumerism that dominates other economies, favouring experiences and relationships over material accumulation. Those who are sceptical ${gapHTML(14)} whether a lower income can sustain a high quality of life are often surprised by how far a modest salary stretches in cities such as Valencia, Seville, or M\u00e1laga.
+</p>
+
+<span class="section-label">Challenges on the Horizon</span>
+<p class="article-text">
+No country is without its challenges, and recent government initiatives aimed ${gapHTML(15)} tackling youth unemployment, housing affordability, and water scarcity show that Spain takes these issues seriously. Nevertheless, the foundations of Spanish life remain remarkably resilient.
+</p>
+
+<div class="controls">
+  <button class="btn btn-primary" onclick="checkAll()">Check All Answers</button>
+  <button class="btn btn-secondary" onclick="revealAll()">Reveal Answers</button>
+  <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+</div>
+
+<div class="results-panel" id="resultsPanel">
+  <h2>Your Result</h2>
+  <div class="big-score" id="bigScore"></div>
+  <p class="feedback" id="feedbackText"></p>
+</div>
+
+<div class="answer-key" id="answerKey">
+  <h3>Answer Key &amp; Collocations</h3>
+  <div class="answer-key-grid" id="answerKeyGrid"></div>
+</div>
+`;
+
+document.getElementById('articleWrap').innerHTML = articleHTML;
+
+let answered = new Set();
+let correctSet = new Set();
+let wrongSet = new Set();
+
+// Enter to check + advance
+document.querySelectorAll('.gap-input').forEach(input => {
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      checkOne(input);
+      const id = parseInt(input.dataset.id);
+      for (let i = id + 1; i <= 15; i++) {
+        const next = document.querySelector(`.gap-input[data-id="${i}"]`);
+        if (next && !next.classList.contains('correct')) { next.focus(); break; }
+      }
+    }
+  });
+});
+
+function checkOne(input) {
+  const id = parseInt(input.dataset.id);
+  const gap = gaps.find(g => g.id === id);
+  const val = input.value.trim().toLowerCase();
+  if (!val) return;
+
+  input.classList.remove('wrong', 'correct');
+  void input.offsetWidth;
+
+  if (gap.answers.includes(val)) {
+    input.classList.add('correct');
+    correctSet.add(id);
+    wrongSet.delete(id);
+  } else {
+    input.classList.add('wrong');
+    wrongSet.add(id);
+    correctSet.delete(id);
+    const corr = document.getElementById(`corr-${id}`);
+    if (!corr.dataset.attempts) corr.dataset.attempts = '0';
+    corr.dataset.attempts = parseInt(corr.dataset.attempts) + 1;
+    if (parseInt(corr.dataset.attempts) >= 2) {
+      corr.textContent = gap.answers[0];
+      corr.classList.add('visible');
+    }
+  }
+
+  answered.add(id);
+  updateStats();
+  updateWordBank();
+  if (correctSet.size === 15) setTimeout(showResults, 400);
+}
+
+function updateWordBank() {
+  // Count how many times each preposition has been correctly used
+  const usedCounts = {};
+  correctSet.forEach(id => {
+    const g = gaps.find(x => x.id === id);
+    const ans = g.answers[0];
+    usedCounts[ans] = (usedCounts[ans] || 0) + 1;
+  });
+
+  // Reset all chips
+  const chips = document.querySelectorAll('.word-bank-chip');
+  chips.forEach(c => c.classList.remove('used'));
+
+  // Cross off chips to match usage count
+  const crossed = {};
+  chips.forEach(chip => {
+    const word = chip.dataset.word;
+    if (usedCounts[word] && (!crossed[word] || crossed[word] < usedCounts[word])) {
+      chip.classList.add('used');
+      crossed[word] = (crossed[word] || 0) + 1;
+    }
+  });
+}
+
+function checkAll() {
+  document.querySelectorAll('.gap-input').forEach(input => checkOne(input));
+  showResults();
+}
+
+function revealAll() {
+  gaps.forEach(g => {
+    const input = document.querySelector(`.gap-input[data-id="${g.id}"]`);
+    input.value = g.answers[0];
+    input.classList.add('correct');
+    input.classList.remove('wrong');
+    correctSet.add(g.id);
+    wrongSet.delete(g.id);
+    answered.add(g.id);
+  });
+  updateStats();
+  updateWordBank();
+  showResults();
+  showAnswerKey();
+}
+
+function resetAll() {
+  document.querySelectorAll('.gap-input').forEach(input => {
+    input.value = '';
+    input.classList.remove('correct', 'wrong');
+    input.style.pointerEvents = '';
+  });
+  document.querySelectorAll('.gap-correction').forEach(c => {
+    c.classList.remove('visible');
+    c.textContent = '';
+    c.dataset.attempts = '0';
+  });
+  document.querySelectorAll('.word-bank-chip').forEach(c => c.classList.remove('used'));
+  answered.clear(); correctSet.clear(); wrongSet.clear();
+  updateStats();
+  document.getElementById('resultsPanel').classList.remove('visible');
+  document.getElementById('answerKey').classList.remove('visible');
+  document.querySelector('.gap-input[data-id="1"]').focus();
+}
+
+function updateStats() {
+  document.getElementById('answeredCount').textContent = answered.size;
+  document.getElementById('correctCount').textContent = correctSet.size;
+  document.getElementById('wrongCount').textContent = wrongSet.size;
+  document.getElementById('progressFill').style.width = ((answered.size / 15) * 100) + '%';
+}
+
+function showResults() {
+  const pct = Math.round((correctSet.size / 15) * 100);
+  document.getElementById('bigScore').textContent = `${correctSet.size} / 15`;
+  const fb = pct === 100 ? "Flawless! Your command of dependent prepositions is exemplary."
+           : pct >= 80  ? "Excellent work. Just a few tricky collocations to revisit."
+           : pct >= 60  ? "A solid effort. Review the answer key to strengthen weaker areas."
+           : "Keep practising \u2014 dependent prepositions take time to master.";
+  document.getElementById('feedbackText').textContent = fb;
+  const panel = document.getElementById('resultsPanel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  showAnswerKey();
+}
+
+function showAnswerKey() {
+  const grid = document.getElementById('answerKeyGrid');
+  grid.innerHTML = gaps.map(g =>
+    `<div class="answer-key-item">
+      <strong>${g.id}. ${g.answers[0]}</strong>
+      <span class="ak-context">${g.context} + ${g.answers[0]}</span>
+    </div>`
+  ).join('');
+  document.getElementById('answerKey').classList.add('visible');
+}
+
+function toggleHint(btn) {
+  const wasOpen = btn.classList.contains('open');
+  document.querySelectorAll('.hint-btn.open').forEach(b => b.classList.remove('open'));
+  if (!wasOpen) btn.classList.add('open');
+}
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('.hint-btn'))
+    document.querySelectorAll('.hint-btn.open').forEach(b => b.classList.remove('open'));
+});
+</script>
+</body>
+</html>
