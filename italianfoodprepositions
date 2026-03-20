@@ -1,1 +1,612 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C1 Preposition Exercise — Italian Food</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --terracotta: #C4593B;
+    --terracotta-light: #E8A08C;
+    --olive: #5B6B3A;
+    --olive-light: #8FA65D;
+    --ink: #2C2418;
+    --warm-gray: #8C7E6E;
+    --gold: #D4A843;
+    --white: #FFFFFF;
+    --correct-bg: #E8F5E2;
+    --correct-border: #5B6B3A;
+    --wrong-bg: #FDECEC;
+    --wrong-border: #C4593B;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    min-height: 100vh;
+    line-height: 1.7;
+  }
+
+  /* Decorative top bar */
+  .top-bar {
+    height: 6px;
+    background: linear-gradient(90deg, var(--olive), var(--terracotta), var(--gold), var(--terracotta), var(--olive));
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: var(--terracotta);
+    margin: 1.2rem auto 0;
+    border-radius: 2px;
+  }
+
+  .level-tag {
+    display: inline-block;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--white);
+    background: var(--olive);
+    padding: 4px 14px;
+    border-radius: 3px;
+    margin-bottom: 1rem;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+
+  h1 em {
+    color: var(--terracotta);
+    font-style: italic;
+  }
+
+  .subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    letter-spacing: 0.5px;
+  }
+
+  /* Instructions */
+  .instructions {
+    background: var(--white);
+    border-left: 4px solid var(--gold);
+    padding: 1rem 1.3rem;
+    margin-bottom: 2.2rem;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.95rem;
+    color: var(--ink);
+    box-shadow: 0 2px 12px rgba(44,36,24,0.05);
+  }
+
+  .instructions strong {
+    color: var(--terracotta);
+  }
+
+  /* Sentences */
+  .sentence-block {
+    margin-bottom: 1.4rem;
+    padding: 1rem 1.2rem;
+    background: var(--white);
+    border-radius: 8px;
+    box-shadow: 0 1px 8px rgba(44,36,24,0.04);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    position: relative;
+  }
+
+  .sentence-block:hover {
+    box-shadow: 0 3px 16px rgba(44,36,24,0.08);
+  }
+
+  .sentence-block.correct {
+    background: var(--correct-bg);
+    border-left: 4px solid var(--correct-border);
+  }
+
+  .sentence-block.wrong {
+    background: var(--wrong-bg);
+    border-left: 4px solid var(--wrong-border);
+  }
+
+  .sentence-num {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    color: var(--terracotta);
+    font-size: 1rem;
+    margin-right: 0.5rem;
+    min-width: 1.8rem;
+    display: inline;
+  }
+
+  .sentence-text {
+    font-size: 1.02rem;
+    display: inline;
+  }
+
+  .sentence-text b {
+    color: var(--terracotta);
+    font-weight: 700;
+  }
+
+  .gap-input {
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-size: 1rem;
+    border: none;
+    border-bottom: 2px dashed var(--terracotta-light);
+    background: transparent;
+    color: var(--ink);
+    width: 90px;
+    text-align: center;
+    padding: 2px 4px;
+    outline: none;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .gap-input:focus {
+    border-bottom-color: var(--terracotta);
+    background: rgba(196,89,59,0.04);
+  }
+
+  .gap-input.correct-input {
+    border-bottom: 2px solid var(--correct-border);
+    color: var(--olive);
+    font-weight: 600;
+    background: transparent;
+  }
+
+  .gap-input.wrong-input {
+    border-bottom: 2px solid var(--wrong-border);
+    color: var(--terracotta);
+    background: transparent;
+  }
+
+  .correction {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--terracotta);
+    font-weight: 600;
+    margin-left: 4px;
+    display: none;
+  }
+
+  .wrong .correction {
+    display: inline;
+  }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 12px 32px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  .btn-check {
+    background: var(--terracotta);
+    color: var(--white);
+  }
+
+  .btn-check:hover { background: #a8432a; transform: translateY(-1px); }
+
+  .btn-reset {
+    background: transparent;
+    color: var(--warm-gray);
+    border: 2px solid var(--warm-gray);
+  }
+
+  .btn-reset:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
+
+  .btn-answers {
+    background: var(--olive);
+    color: var(--white);
+  }
+
+  .btn-answers:hover { background: #49572e; transform: translateY(-1px); }
+
+  .btn-insta {
+    background: linear-gradient(135deg, #833AB4, #C13584, #E1306C, #F77737);
+    color: var(--white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-insta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+  .btn-insta svg { width: 16px; height: 16px; fill: var(--white); flex-shrink: 0; }
+
+  /* Score */
+  .score-display {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--warm-gray);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .score-display.visible { opacity: 1; }
+
+  .score-display .score-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--terracotta);
+  }
+
+  /* Answer key */
+  .answer-key {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--white);
+    border-radius: 8px;
+    border: 2px solid var(--gold);
+    display: none;
+    box-shadow: 0 2px 12px rgba(44,36,24,0.06);
+  }
+
+  .answer-key.visible { display: block; }
+
+  .answer-key h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--terracotta);
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+  }
+
+  .answer-key ol {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    columns: 2;
+    column-gap: 2rem;
+    padding-left: 1.4rem;
+    color: var(--ink);
+  }
+
+  .answer-key li {
+    margin-bottom: 0.3rem;
+    break-inside: avoid;
+  }
+
+  .answer-key li strong {
+    color: var(--olive);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    margin-top: 3rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    color: var(--warm-gray);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 600px) {
+    h1 { font-size: 1.7rem; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    .answer-key ol { columns: 1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="container">
+  <header>
+    <span class="level-tag">Level C1</span>
+    <h1>Prepositions &amp; <em>Italian Food</em></h1>
+    <p class="subtitle">Dependent prepositions &amp; prepositional phrases — 30 items</p>
+  </header>
+
+  <div class="instructions">
+    <strong>Instructions:</strong> Fill in each gap with the correct preposition. Then click <strong>Check Answers</strong> to see your score.
+  </div>
+
+  <div id="exercise"></div>
+
+  <div class="btn-row">
+    <button class="btn btn-check" onclick="checkAnswers()">Check Answers</button>
+    <button class="btn btn-reset" onclick="resetExercise()">Reset</button>
+    <button class="btn btn-answers" onclick="toggleKey()">Answer Key</button>
+    <a class="btn btn-insta" href="https://www.instagram.com/johnplusenglish/" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.17.054 1.97.24 2.43.403a4.088 4.088 0 011.47.958c.453.453.78.898.958 1.47.163.46.35 1.26.403 2.43.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.054 1.17-.24 1.97-.403 2.43a4.088 4.088 0 01-.958 1.47 4.088 4.088 0 01-1.47.958c-.46.163-1.26.35-2.43.403-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.17-.054-1.97-.24-2.43-.403a4.088 4.088 0 01-1.47-.958 4.088 4.088 0 01-.958-1.47c-.163-.46-.35-1.26-.403-2.43C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.054-1.17.24-1.97.403-2.43a4.088 4.088 0 01.958-1.47 4.088 4.088 0 011.47-.958c.46-.163 1.26-.35 2.43-.403C8.416 2.175 8.796 2.163 12 2.163M12 0C8.741 0 8.333.014 7.053.072 5.775.131 4.902.333 4.14.63a5.876 5.876 0 00-2.126 1.384A5.876 5.876 0 00.63 4.14C.333 4.902.131 5.775.072 7.053.014 8.333 0 8.741 0 12s.014 3.667.072 4.947c.059 1.278.261 2.151.558 2.913a5.876 5.876 0 001.384 2.126 5.876 5.876 0 002.126 1.384c.762.297 1.635.499 2.913.558C8.333 23.986 8.741 24 12 24s3.667-.014 4.947-.072c1.278-.059 2.151-.261 2.913-.558a5.876 5.876 0 002.126-1.384 5.876 5.876 0 001.384-2.126c.297-.762.499-1.635.558-2.913.058-1.28.072-1.688.072-4.947s-.014-3.667-.072-4.947c-.059-1.278-.261-2.151-.558-2.913a5.876 5.876 0 00-1.384-2.126A5.876 5.876 0 0019.86.63C19.098.333 18.225.131 16.947.072 15.667.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      JohnPlusEnglish
+    </a>
+  </div>
+
+  <div class="score-display" id="score"></div>
+
+  <div class="answer-key" id="answerKey">
+    <h3>Answer Key</h3>
+    <ol id="answerList"></ol>
+  </div>
+
+  <footer>Preposition Practice — Italian Cuisine</footer>
+</div>
+
+<script>
+const data = [
+  {
+    before: "Traditional Italian cuisine <b>relies</b> heavily",
+    answer: "on",
+    after: "the quality of its raw ingredients rather than complex techniques."
+  },
+  {
+    before: "Many tourists are not <b>accustomed</b>",
+    answer: "to",
+    after: "the Italian custom of serving pasta as a separate course before the main dish."
+  },
+  {
+    before: "The rich flavour of a Neapolitan ragù <b>results</b>",
+    answer: "from",
+    after: "slow-cooking the sauce for several hours over a very low heat."
+  },
+  {
+    before: "Italian chefs often <b>insist</b>",
+    answer: "on",
+    after: "using only San Marzano tomatoes, which are prized for their sweetness."
+  },
+  {
+    before: "Good risotto <b>consists</b>",
+    answer: "of",
+    after: "just a handful of ingredients, but each one must be of the highest quality."
+  },
+  {
+    before: "The best gelato <b>differs</b>",
+    answer: "from",
+    after: "regular ice cream in that it contains less fat and is churned more slowly."
+  },
+  {
+    before: "Italian grandmothers are <b>famous</b>",
+    answer: "for",
+    after: "passing their closely guarded recipes down from one generation to the next."
+  },
+  {
+    before: "A classic bruschetta is <b>made</b>",
+    answer: "with",
+    after: "ripe tomatoes, fresh basil, garlic, and a drizzle of extra-virgin olive oil."
+  },
+  {
+    before: "Many regional dishes have been <b>associated</b>",
+    answer: "with",
+    after: "specific cities for centuries — think of Bolognese ragù or Roman carbonara."
+  },
+  {
+    before: "Strict food purists <b>disapprove</b>",
+    answer: "of",
+    after: "adding cream to carbonara, regarding it as a culinary crime."
+  },
+  {
+    before: "The success of a pizza Margherita <b>depends</b>",
+    answer: "on",
+    after: "the dough being stretched by hand and baked in a wood-fired oven."
+  },
+  {
+    before: "Pecorino Romano is often <b>substituted</b>",
+    answer: "for",
+    after: "Parmigiano-Reggiano in dishes from central and southern Italy."
+  },
+  {
+    before: "Italian winemakers take great <b>pride</b>",
+    answer: "in",
+    after: "producing wines that perfectly complement the local cuisine of their region."
+  },
+  {
+    before: "In <b>contrast</b>",
+    answer: "to",
+    after: "mass-produced balsamic vinegar, the traditional variety from Modena is aged for at least twelve years."
+  },
+  {
+    before: "Fresh mozzarella is <b>sensitive</b>",
+    answer: "to",
+    after: "refrigeration and is best eaten within hours of being made."
+  },
+  {
+    before: "The use of DOP labels prevents consumers from being <b>misled</b>",
+    answer: "by",
+    after: "inferior imitations of protected Italian products."
+  },
+  {
+    before: "A good espresso should be <b>capable</b>",
+    answer: "of",
+    after: "holding a spoonful of sugar on the surface of its crema for a few seconds."
+  },
+  {
+    before: "Italian home cooks generally <b>refrain</b>",
+    answer: "from",
+    after: "combining seafood and cheese in the same dish, as it is considered a serious faux pas."
+  },
+  {
+    before: "The growing demand for truffle oil has <b>led</b>",
+    answer: "to",
+    after: "a sharp increase in the production of synthetic alternatives."
+  },
+  {
+    before: "On the whole, Italian culinary traditions are <b>rooted</b>",
+    answer: "in",
+    after: "the principle that simplicity, when executed well, is the height of sophistication."
+  },
+  {
+    before: "Aged Parmigiano-Reggiano is <b>rich</b>",
+    answer: "in",
+    after: "umami flavour, which is why it is often grated over pasta as a finishing touch."
+  },
+  {
+    before: "Many visitors to Italy are <b>surprised</b>",
+    answer: "by",
+    after: "the enormous regional variation in dishes that share the same name."
+  },
+  {
+    before: "A traditional Italian meal is <b>divided</b>",
+    answer: "into",
+    after: "several courses, starting with antipasti and ending with a digestivo."
+  },
+  {
+    before: "The rise of farm-to-table dining has <b>contributed</b>",
+    answer: "to",
+    after: "a renewed interest in heirloom varieties of Italian vegetables and grains."
+  },
+  {
+    before: "Authentic Neapolitan pizza dough must be left to rise for a <b>period</b>",
+    answer: "of",
+    after: "at least eight hours before it can be shaped and baked."
+  },
+  {
+    before: "Italian food critics are often <b>sceptical</b>",
+    answer: "about",
+    after: "fusion restaurants that attempt to blend traditional recipes with foreign cuisines."
+  },
+  {
+    before: "When it <b>comes</b>",
+    answer: "to",
+    after: "olive oil, the Italians distinguish clearly between varieties suited to cooking and those reserved for dressing."
+  },
+  {
+    before: "The slow food movement, which originated in Italy, was set up in <b>response</b>",
+    answer: "to",
+    after: "the spread of fast-food chains across the country in the late 1980s."
+  },
+  {
+    before: "Italians generally <b>frown</b>",
+    answer: "on",
+    after: "the practice of drinking cappuccino after midday, considering it appropriate only at breakfast."
+  },
+  {
+    before: "The texture of handmade pasta is <b>superior</b>",
+    answer: "to",
+    after: "that of factory-produced varieties, owing to its rougher surface, which allows sauces to cling more effectively."
+  }
+];
+
+// Build exercise
+const exerciseEl = document.getElementById('exercise');
+const answerListEl = document.getElementById('answerList');
+
+data.forEach((item, i) => {
+  const block = document.createElement('div');
+  block.className = 'sentence-block';
+  block.id = `block-${i}`;
+  block.innerHTML = `
+    <span class="sentence-num">${i + 1}.</span>
+    <span class="sentence-text">
+      ${item.before}
+      <input type="text" class="gap-input" id="gap-${i}" autocomplete="off" spellcheck="false">
+      <span class="correction" id="corr-${i}">→ ${item.answer}</span>
+      ${item.after}
+    </span>
+  `;
+  exerciseEl.appendChild(block);
+
+  const li = document.createElement('li');
+  li.innerHTML = `<strong>${item.answer}</strong>`;
+  answerListEl.appendChild(li);
+});
+
+// Allow Enter key to advance to next input
+document.querySelectorAll('.gap-input').forEach((input, i) => {
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const next = document.getElementById(`gap-${i + 1}`);
+      if (next) next.focus();
+      else checkAnswers();
+    }
+  });
+});
+
+function checkAnswers() {
+  let score = 0;
+  data.forEach((item, i) => {
+    const input = document.getElementById(`gap-${i}`);
+    const block = document.getElementById(`block-${i}`);
+    const val = input.value.trim().toLowerCase();
+
+    block.classList.remove('correct', 'wrong');
+    input.classList.remove('correct-input', 'wrong-input');
+
+    if (val === item.answer) {
+      block.classList.add('correct');
+      input.classList.add('correct-input');
+      score++;
+    } else {
+      block.classList.add('wrong');
+      input.classList.add('wrong-input');
+    }
+  });
+
+  const scoreEl = document.getElementById('score');
+  scoreEl.innerHTML = `<span class="score-num">${score}</span> / 30`;
+  scoreEl.classList.add('visible');
+}
+
+function resetExercise() {
+  data.forEach((_, i) => {
+    const input = document.getElementById(`gap-${i}`);
+    const block = document.getElementById(`block-${i}`);
+    input.value = '';
+    input.classList.remove('correct-input', 'wrong-input');
+    block.classList.remove('correct', 'wrong');
+  });
+  document.getElementById('score').classList.remove('visible');
+  document.getElementById('answerKey').classList.remove('visible');
+  document.getElementById(`gap-0`).focus();
+}
+
+function toggleKey() {
+  document.getElementById('answerKey').classList.toggle('visible');
+}
+</script>
+
+</body>
+</html>
