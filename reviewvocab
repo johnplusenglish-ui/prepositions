@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vocab Review — 20 March 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #6b6459;
+    --accent: #c45d3e;
+    --accent-light: #f8ebe6;
+    --success: #3a7d5c;
+    --success-light: #e6f4ec;
+    --error: #c44040;
+    --error-light: #fce8e8;
+    --border: #e0dbd2;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 20px 80px;
+  }
+
+  header {
+    text-align: center;
+    padding: 40px 0 32px;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 36px;
+  }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  header .subtitle {
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+
+  /* Navigation tabs */
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 28px;
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 6px;
+    box-shadow: var(--shadow);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px 16px;
+    border: none;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.25s ease;
+  }
+
+  .tab:hover { color: var(--ink); background: var(--bg); }
+  .tab.active { background: var(--accent); color: #fff; }
+
+  .tab .tab-icon { margin-right: 6px; }
+
+  /* Progress bar */
+  .progress-wrap {
+    margin-bottom: 24px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+
+  .progress-bar {
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+
+  /* Card styles */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 32px 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 20px;
+    animation: fadeUp 0.35s ease;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  /* Fill in the gap */
+  .sentence {
+    font-size: 1.15rem;
+    line-height: 1.7;
+    margin-bottom: 20px;
+    color: var(--ink);
+  }
+
+  .sentence .gap {
+    display: inline-block;
+    min-width: 140px;
+    border-bottom: 2.5px dashed var(--accent);
+    text-align: center;
+    padding: 2px 4px;
+    margin: 0 3px;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .gap.correct {
+    border-bottom-color: var(--success);
+    color: var(--success);
+    border-bottom-style: solid;
+  }
+
+  .gap.wrong {
+    border-bottom-color: var(--error);
+    color: var(--error);
+    text-decoration: line-through;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .input-row input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .input-row input:focus { border-color: var(--accent); }
+  .input-row input.correct { border-color: var(--success); background: var(--success-light); }
+  .input-row input.wrong { border-color: var(--error); background: var(--error-light); }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #b0512f; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+  .btn-secondary {
+    background: var(--bg);
+    color: var(--ink);
+    border: 2px solid var(--border);
+  }
+  .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+
+  .hint-text {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .clue-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .btn-clue {
+    padding: 8px 16px;
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .btn-clue:hover { border-color: var(--accent); color: var(--accent); }
+
+  .clue-text {
+    font-size: 1rem;
+    font-family: 'DM Sans', monospace;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    font-weight: 600;
+    animation: fadeUp 0.25s ease;
+  }
+
+  .correction {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    padding: 8px 14px;
+    border-radius: 8px;
+    animation: fadeUp 0.25s ease;
+  }
+  .correction.success { background: var(--success-light); color: var(--success); }
+  .correction.fail { background: var(--error-light); color: var(--error); }
+
+  /* Matching exercise */
+  .match-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .match-col-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  .match-item {
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    user-select: none;
+    background: #fff;
+  }
+
+  .match-item:hover:not(.matched):not(.selected) {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+
+  .match-item.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .match-item.matched {
+    border-color: var(--success);
+    background: var(--success-light);
+    color: var(--success);
+    cursor: default;
+    font-weight: 600;
+  }
+
+  .match-item.wrong-flash {
+    border-color: var(--error);
+    background: var(--error-light);
+    animation: shake 0.35s ease;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  /* Score summary */
+  .score-card {
+    text-align: center;
+    padding: 48px 28px;
+  }
+
+  .score-card .emoji { font-size: 3rem; margin-bottom: 16px; }
+
+  .score-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+
+  .score-card .score-num {
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 12px 0;
+  }
+
+  .score-card p { color: var(--muted); margin-bottom: 20px; }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 500px) {
+    .container { padding: 16px 14px 60px; }
+    header h1 { font-size: 1.5rem; }
+    .card { padding: 22px 18px; }
+    .match-grid { grid-template-columns: 1fr; }
+    .input-row { flex-direction: column; }
+    .input-row .btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header>
+    <h1>Vocab Review</h1>
+    <div class="subtitle">Class — 20 March 2026</div>
+  </header>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('gap')">
+      <span class="tab-icon">✏️</span> Fill the Gap
+    </button>
+    <button class="tab" onclick="switchTab('match')">
+      <span class="tab-icon">🔗</span> Match Up
+    </button>
+  </div>
+
+  <div id="gap-section"></div>
+  <div id="match-section" style="display:none"></div>
+</div>
+
+<script>
+// ── DATA ──
+const gapExercises = [
+  { sentence: "It takes a while to really ___ someone when you first move to a new city.", answer: "get to know", hint: "phrasal verb: become familiar with" },
+  { sentence: "I couldn't ___ why my computer kept crashing, so I called tech support.", answer: "figure out", hint: "phrasal verb: understand / solve" },
+  { sentence: "___, we missed the flight and had to spend the night at the airport.", answer: "long story short", hint: "idiom: to summarise a complicated situation" },
+  { sentence: "We need to ___ a creative solution before the deadline.", answer: "come up with", hint: "phrasal verb: think of / invent" },
+  { sentence: "We used to be inseparable at university, but over the years we've ___.", answer: "grown apart", hint: "phrasal verb: gradually become less close" },
+  { sentence: "She's been living abroad for two years now and is starting to feel quite ___.", answer: "homesick", hint: "adjective: missing home" },
+  { sentence: "I don't have any proof — it's just ___.", answer: "a hunch", hint: "noun: an intuitive feeling" },
+  { sentence: "She'd had three espressos and was absolutely ___ — she couldn't stop talking!", answer: "wired to the moon", hint: "idiom: extremely energetic / hyper (Irish English)" },
+  { sentence: "After a long week, I like to ___ by reading or going for a walk.", answer: "unwind", hint: "verb: relax" },
+  { sentence: "The stress of the new job has really ___ her health.", answer: "taken a toll on", hint: "phrase: had a negative effect on" },
+  { sentence: "He offered me the car for only €500 — it sounded a bit ___.", answer: "fishy", hint: "adjective: suspicious / not quite right" },
+  { sentence: "She's very ___ her nieces — she takes them out every weekend.", answer: "fond of", hint: "adjective + preposition: to like/love somebody" },
+  { sentence: "I know the gym would be good for me, but I just ___ going today.", answer: "can't be bothered to", hint: "phrase: too lazy or unmotivated to do something" /* variant: can't be bothered */ },
+  { sentence: "To get the job, you'll need to ___ at least two languages.", answer: "have a command of", hint: "phrase: be skilled in / have strong ability in" },
+  { sentence: "___ — I love the food here, but I do miss rainy Sunday mornings at home.", answer: "don't get me wrong", hint: "idiom: don't misunderstand me" },
+];
+
+const matchData = [
+  { term: "get to know", def: "Become acquainted or familiar with someone" },
+  { term: "figure out", def: "Solve or understand something through thinking" },
+  { term: "come up with", def: "Think of or produce an idea or plan" },
+  { term: "grow apart", def: "Gradually become less close to someone over time" },
+  { term: "a gilet", def: "A sleeveless padded jacket" },
+  { term: "the bluff", def: "An attempt to deceive someone into believing something false" },
+  { term: "to bluff", def: "To pretend to have a stronger position than you really do" },
+  { term: "a hunch", def: "An intuitive feeling about something without evidence" },
+  { term: "unwind", def: "Relax after a period of work or tension" },
+  { term: "take a toll on", def: "Have a gradual negative effect on something or someone" },
+  { term: "fishy", def: "Seeming dishonest or suspicious" },
+  { term: "fond of", def: "Having affection or a liking for someone or something" },
+  { term: "vacancies", def: "Available positions or jobs that need to be filled" },
+  { term: "I'm between jobs", def: "A polite way of saying you're currently unemployed" },
+  { term: "mindset", def: "A person's way of thinking or general attitude" },
+];
+
+// ── STATE ──
+let currentGap = 0;
+let gapScore = 0;
+let gapAnswered = [];
+let clueRevealed = [];
+
+let matchTerms = [];
+let matchDefs = [];
+let selectedTerm = null;
+let selectedDef = null;
+let matchedPairs = 0;
+let matchAttempts = 0;
+let matchBatchIndex = 0;
+const MATCH_BATCH = 6;
+
+// ── TAB SWITCHING ──
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    t.classList.toggle('active', (tab === 'gap' && i === 0) || (tab === 'match' && i === 1));
+  });
+  document.getElementById('gap-section').style.display = tab === 'gap' ? '' : 'none';
+  document.getElementById('match-section').style.display = tab === 'match' ? '' : 'none';
+}
+
+// ── FILL THE GAP ──
+function generateClue(answer) {
+  return answer.split(' ').map(word => {
+    if (word.length <= 1) return word;
+    // show first letter + underscores for the rest
+    return word[0] + '_'.repeat(word.length - 1);
+  }).join('  ');
+}
+
+function renderGap() {
+  const sec = document.getElementById('gap-section');
+  if (currentGap >= gapExercises.length) {
+    const pct = Math.round((gapScore / gapExercises.length) * 100);
+    const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+    sec.innerHTML = `
+      <div class="card score-card">
+        <div class="emoji">${emoji}</div>
+        <h2>Exercise Complete!</h2>
+        <div class="score-num">${gapScore} / ${gapExercises.length}</div>
+        <p>You got ${pct}% correct.</p>
+        <div class="btn-row">
+          <button class="btn btn-primary" onclick="resetGap()">Try Again</button>
+          <button class="btn btn-secondary" onclick="switchTab('match')">Try Matching →</button>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const q = gapExercises[currentGap];
+  const parts = q.sentence.split('___');
+  const answered = gapAnswered[currentGap];
+
+  sec.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span>Question ${currentGap + 1} of ${gapExercises.length}</span>
+        <span>Score: ${gapScore}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${((currentGap) / gapExercises.length) * 100}%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Fill in the blank</div>
+      <div class="sentence">${parts[0]}<span class="gap" id="gapDisplay">${answered ? answered.given : '???'}</span>${parts[1] || ''}</div>
+      ${answered ? '' : `
+        <div class="input-row">
+          <input type="text" id="gapInput" placeholder="Type your answer…" autocomplete="off" autofocus />
+          <button class="btn btn-primary" id="checkBtn" onclick="checkGap()">Check</button>
+        </div>
+        <div class="hint-text">💡 ${q.hint}</div>
+        <div class="clue-row">
+          <button class="btn-clue" id="clueBtn" onclick="revealClue()" ${clueRevealed[currentGap] ? 'style="display:none"' : ''}>🔎 Show Clue</button>
+          <span class="clue-text" id="clueText">${clueRevealed[currentGap] ? generateClue(q.answer) : ''}</span>
+        </div>
+      `}
+      <div id="gapFeedback"></div>
+      ${answered ? `<div style="margin-top:16px"><button class="btn btn-primary" onclick="nextGap()">Next →</button></div>` : ''}
+    </div>`;
+
+  if (answered) {
+    const gap = document.getElementById('gapDisplay');
+    const fb = document.getElementById('gapFeedback');
+    if (answered.correct) {
+      gap.classList.add('correct');
+      gap.textContent = q.answer;
+      fb.innerHTML = `<div class="correction success">✓ Correct!</div>`;
+    } else {
+      gap.classList.add('wrong');
+      fb.innerHTML = `<div class="correction fail">✗ The answer was: <strong>${q.answer}</strong></div>`;
+    }
+  } else {
+    const inp = document.getElementById('gapInput');
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') checkGap(); });
+    inp.focus();
+  }
+}
+
+function normalise(s) {
+  return s.toLowerCase().replace(/['']/g, "'").replace(/[^a-z0-9' ]/g, '').trim();
+}
+
+function checkGap() {
+  const inp = document.getElementById('gapInput');
+  const val = inp.value.trim();
+  if (!val) return;
+
+  const q = gapExercises[currentGap];
+  const correct = normalise(val) === normalise(q.answer) ||
+    (q.answer === "taken a toll on" && normalise(val) === normalise("taken a toll on")) ||
+    (q.answer === "can't be bothered to" && (normalise(val) === normalise("can't be bothered") || normalise(val) === normalise("can't be bothered to"))) ||
+    (q.answer === "don't get me wrong" && normalise(val) === normalise("don't get me wrong")) ||
+    (q.answer === "have a command of" && normalise(val) === normalise("have a strong command of"));
+
+  if (correct) gapScore++;
+  gapAnswered[currentGap] = { given: val, correct };
+  renderGap();
+}
+
+function revealClue() {
+  clueRevealed[currentGap] = true;
+  const q = gapExercises[currentGap];
+  const clueText = document.getElementById('clueText');
+  const clueBtn = document.getElementById('clueBtn');
+  clueText.textContent = generateClue(q.answer);
+  clueBtn.style.display = 'none';
+}
+
+function nextGap() {
+  currentGap++;
+  renderGap();
+}
+
+function resetGap() {
+  currentGap = 0;
+  gapScore = 0;
+  gapAnswered = [];
+  clueRevealed = [];
+  renderGap();
+}
+
+// ── MATCHING ──
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startMatchBatch() {
+  const start = matchBatchIndex * MATCH_BATCH;
+  const batch = matchData.slice(start, start + MATCH_BATCH);
+  if (batch.length === 0) {
+    renderMatchScore();
+    return;
+  }
+  matchTerms = shuffle(batch.map((d, i) => ({ ...d, id: start + i, side: 'term' })));
+  matchDefs = shuffle(batch.map((d, i) => ({ ...d, id: start + i, side: 'def' })));
+  selectedTerm = null;
+  selectedDef = null;
+  matchedPairs = 0;
+  renderMatch();
+}
+
+function renderMatch() {
+  const sec = document.getElementById('match-section');
+  const totalBatches = Math.ceil(matchData.length / MATCH_BATCH);
+  const batchNum = matchBatchIndex + 1;
+
+  sec.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-info">
+        <span>Round ${batchNum} of ${totalBatches}</span>
+        <span>Matched: ${matchedPairs} / ${matchTerms.length}</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${(matchedPairs / matchTerms.length) * 100}%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Tap a word/phrase, then tap its definition</div>
+      <div class="match-grid">
+        <div>
+          <div class="match-col-label">Word / Phrase</div>
+          ${matchTerms.map(t => `
+            <div class="match-item ${t.matched ? 'matched' : ''} ${selectedTerm && selectedTerm.id === t.id ? 'selected' : ''}"
+                 onclick="selectMatch('term', ${t.id})"
+                 style="margin-bottom:10px"
+                 id="term-${t.id}">${t.term}</div>
+          `).join('')}
+        </div>
+        <div>
+          <div class="match-col-label">Definition</div>
+          ${matchDefs.map(d => `
+            <div class="match-item ${d.matched ? 'matched' : ''} ${selectedDef && selectedDef.id === d.id ? 'selected' : ''}"
+                 onclick="selectMatch('def', ${d.id})"
+                 style="margin-bottom:10px"
+                 id="def-${d.id}">${d.def}</div>
+          `).join('')}
+        </div>
+      </div>
+    </div>`;
+}
+
+function selectMatch(side, id) {
+  const item = (side === 'term' ? matchTerms : matchDefs).find(x => x.id === id);
+  if (!item || item.matched) return;
+
+  if (side === 'term') selectedTerm = item;
+  else selectedDef = item;
+
+  if (selectedTerm && selectedDef) {
+    matchAttempts++;
+    if (selectedTerm.id === selectedDef.id) {
+      // Correct match
+      matchTerms.find(t => t.id === selectedTerm.id).matched = true;
+      matchDefs.find(d => d.id === selectedDef.id).matched = true;
+      matchedPairs++;
+      selectedTerm = null;
+      selectedDef = null;
+      if (matchedPairs === matchTerms.length) {
+        setTimeout(() => {
+          matchBatchIndex++;
+          startMatchBatch();
+        }, 500);
+      } else {
+        renderMatch();
+      }
+    } else {
+      // Wrong
+      const tEl = document.getElementById('term-' + selectedTerm.id);
+      const dEl = document.getElementById('def-' + selectedDef.id);
+      tEl.classList.add('wrong-flash');
+      dEl.classList.add('wrong-flash');
+      selectedTerm = null;
+      selectedDef = null;
+      setTimeout(() => {
+        tEl.classList.remove('wrong-flash', 'selected');
+        dEl.classList.remove('wrong-flash', 'selected');
+        renderMatch();
+      }, 500);
+      return;
+    }
+  }
+  renderMatch();
+}
+
+function renderMatchScore() {
+  const sec = document.getElementById('match-section');
+  const pct = Math.round((matchData.length / matchAttempts) * 100);
+  const emoji = pct >= 80 ? '🎉' : pct >= 50 ? '👍' : '💪';
+  sec.innerHTML = `
+    <div class="card score-card">
+      <div class="emoji">${emoji}</div>
+      <h2>All Matched!</h2>
+      <div class="score-num">${matchData.length} pairs</div>
+      <p>You made ${matchAttempts} attempts — ${pct}% accuracy.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="resetMatch()">Play Again</button>
+        <button class="btn btn-secondary" onclick="switchTab('gap')">← Fill the Gap</button>
+      </div>
+    </div>`;
+}
+
+function resetMatch() {
+  matchBatchIndex = 0;
+  matchAttempts = 0;
+  startMatchBatch();
+}
+
+// ── INIT ──
+renderGap();
+startMatchBatch();
+</script>
+
+</body>
+</html>
